@@ -1,6 +1,10 @@
+#pragma once
+
 #include <iostream>
-#include "Animal.h"
 #include <vector>
+#include "Animal.h"
+#include "Lion.h"
+#include "Gazelle.h"
 using namespace std;
 
   class World{

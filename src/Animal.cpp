@@ -2,11 +2,13 @@
 
   int Animal::nb_animaux=0;
 
-  Animal::Animal():x(0),y(0),energie(100){
+  Animal::Animal():x(0),y(0),energie(100), nom("undefined")
+  {
     nb_animaux++;
   }
 
-  Animal::Animal(int xinit, int yinit, int einit){
+  Animal::Animal(int xinit, int yinit, int einit):nom("undefined")
+  {
     x=xinit;
     y=yinit;
     energie=einit;
@@ -57,17 +59,3 @@
   int Animal::getCount(){
     return nb_animaux;
   }
-
-  void Gazelle::affiche(){
-    cout<<"x = "<<x<<" y = "<<y<<" type = "<< nom<<"\n";
-  }
-
-  char Gazelle::getterId() const{
-   return lettre;
- }
-  void Lion::affiche(){
-    cout<<"x = "<<x<<" y = "<<y<<" type = "<< nom<<"\n";
-  }
-  char Lion::getterId() const{
-   return lettre;
- }

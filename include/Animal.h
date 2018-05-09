@@ -1,4 +1,9 @@
+#pragma once
+
 #include <iostream>
+#include <string>
+#include <QLabel>
+
 using namespace std;
 
   class Animal{
@@ -19,21 +24,7 @@ using namespace std;
     protected :
       int x,y,energie;
       char lettre;
+      std::string nom;
       static int nb_animaux;
-  };
-
-  class  Gazelle : public Animal{
-    public :
-    void affiche();
-    char getterId() const;
-    private :
-    char nom[50]="Gazelle";
-  };
-
-  class  Lion : public Animal{
-    public :
-    void affiche();
-    char getterId() const;
-    private :
-    char nom[50]="Lion";
-  };
+      // QLabel label;
+};

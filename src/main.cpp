@@ -1,5 +1,5 @@
-#include "World.h"
 #include <vector>
+#include "World.h"
 #define NB_ANIMALO 100
 
 int main()
