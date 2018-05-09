@@ -147,6 +147,8 @@ void World::passeuntour(){
     }
     if (world[i]->getterE() <= 0){
       tab[world[i]->getterX()][world[i]->getterY()]='X';
+      delete world[i]->getImg();
+      delete world[i];
       world.erase(world.begin()+i);
       nb_animaux--;
       i--;
