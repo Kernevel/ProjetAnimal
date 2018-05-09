@@ -10,7 +10,7 @@ using namespace std;
     public:
       Animal();
       Animal(int xinit, int yinit,int einit);
-      ~Animal();
+      virtual ~Animal();
       int getterX() const;
       int getterY() const;
       int getterE() const;
