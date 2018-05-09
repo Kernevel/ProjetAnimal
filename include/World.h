@@ -7,10 +7,12 @@
 #include "Animal.h"
 #include "Lion.h"
 #include "Gazelle.h"
+#include <QMainWindow>
 using namespace std;
 
   class World: public QGraphicsScene
   {
+    Q_OBJECT
     private:
       static int const MAX_X=50;
       static int const MAX_Y=50;
@@ -20,6 +22,7 @@ using namespace std;
       QPixmap _lion;
       QPixmap _gazelle;
       QPixmap _sol;
+      std::vector<QGraphicsPixmapItem *> _imgsSol;
     public:
       World();
       World(int tot, QObject *parent);

@@ -55,14 +55,16 @@ SOURCES       = src/Animal.cpp \
 		src/Lion.cpp \
 		src/main.cpp \
 		src/World.cpp \
-		src/fenetrePrincipale.cpp src/moc/moc_fenetrePrincipale.cpp
+		src/fenetrePrincipale.cpp src/moc/moc_fenetrePrincipale.cpp \
+		src/moc/moc_World.cpp
 OBJECTS       = Animal.o \
 		Gazelle.o \
 		Lion.o \
 		main.o \
 		World.o \
 		fenetrePrincipale.o \
-		moc_fenetrePrincipale.o
+		moc_fenetrePrincipale.o \
+		moc_World.o
 DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
 		/usr/lib/qt/mkspecs/common/unix.conf \
 		/usr/lib/qt/mkspecs/common/linux.conf \
@@ -699,9 +701,9 @@ compiler_moc_predefs_clean:
 src/moc/moc_predefs.h: /usr/lib/qt/mkspecs/features/data/dummy.cpp
 	g++ -pipe -O2 -march=x86-64 -mtune=generic -O2 -pipe -fstack-protector-strong -fno-plt -Wall -W -dM -E -o src/moc/moc_predefs.h /usr/lib/qt/mkspecs/features/data/dummy.cpp
 
-compiler_moc_header_make_all: src/moc/moc_fenetrePrincipale.cpp
+compiler_moc_header_make_all: src/moc/moc_fenetrePrincipale.cpp src/moc/moc_World.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) src/moc/moc_fenetrePrincipale.cpp
+	-$(DEL_FILE) src/moc/moc_fenetrePrincipale.cpp src/moc/moc_World.cpp
 src/moc/moc_fenetrePrincipale.cpp: include/World.h \
 		include/Animal.h \
 		include/Lion.h \
@@ -710,6 +712,14 @@ src/moc/moc_fenetrePrincipale.cpp: include/World.h \
 		src/moc/moc_predefs.h \
 		/usr/bin/moc
 	/usr/bin/moc $(DEFINES) --include ./src/moc//moc_predefs.h -I/usr/lib/qt/mkspecs/linux-g++ -I/home/antoine/Documents/ProjetAnimal -I/home/antoine/Documents/ProjetAnimal/include -I/usr/include/qt -I/usr/include/qt/QtWidgets -I/usr/include/qt/QtGui -I/usr/include/qt/QtCore -I/usr/include/c++/7.3.1 -I/usr/include/c++/7.3.1/x86_64-pc-linux-gnu -I/usr/include/c++/7.3.1/backward -I/usr/lib/gcc/x86_64-pc-linux-gnu/7.3.1/include -I/usr/local/include -I/usr/lib/gcc/x86_64-pc-linux-gnu/7.3.1/include-fixed -I/usr/include include/fenetrePrincipale.hpp -o src/moc/moc_fenetrePrincipale.cpp
+
+src/moc/moc_World.cpp: include/Animal.h \
+		include/Lion.h \
+		include/Gazelle.h \
+		include/World.h \
+		src/moc/moc_predefs.h \
+		/usr/bin/moc
+	/usr/bin/moc $(DEFINES) --include ./src/moc//moc_predefs.h -I/usr/lib/qt/mkspecs/linux-g++ -I/home/antoine/Documents/ProjetAnimal -I/home/antoine/Documents/ProjetAnimal/include -I/usr/include/qt -I/usr/include/qt/QtWidgets -I/usr/include/qt/QtGui -I/usr/include/qt/QtCore -I/usr/include/c++/7.3.1 -I/usr/include/c++/7.3.1/x86_64-pc-linux-gnu -I/usr/include/c++/7.3.1/backward -I/usr/lib/gcc/x86_64-pc-linux-gnu/7.3.1/include -I/usr/local/include -I/usr/lib/gcc/x86_64-pc-linux-gnu/7.3.1/include-fixed -I/usr/include include/World.h -o src/moc/moc_World.cpp
 
 compiler_moc_objc_header_make_all:
 compiler_moc_objc_header_clean:
@@ -760,6 +770,9 @@ fenetrePrincipale.o: src/fenetrePrincipale.cpp include/fenetrePrincipale.hpp \
 
 moc_fenetrePrincipale.o: src/moc/moc_fenetrePrincipale.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_fenetrePrincipale.o src/moc/moc_fenetrePrincipale.cpp
+
+moc_World.o: src/moc/moc_World.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_World.o src/moc/moc_World.cpp
 
 ####### Install
 

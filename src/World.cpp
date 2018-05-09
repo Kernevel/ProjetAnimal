@@ -1,6 +1,7 @@
 #include "World.h"
 #include <cstdlib>
 #include <ctime>
+#include <QGraphicsPixmapItem>
 #include <unistd.h>
 
 World::World()
@@ -18,6 +19,21 @@ World::World(int nb_anim, QObject *parent) : QGraphicsScene(parent){
   _lion = QPixmap("./img/Lion.png");
   _gazelle = QPixmap("./img/Gazelle.png");
   _sol = QPixmap("./img/sol.png");
+  for (int y = 0; y < getMAX_Y(); y++)
+  {
+    for (int x = 0; x < getMAX_X(); x++)
+    {
+      QGraphicsPixmapItem *imgTmp = new QGraphicsPixmapItem(_sol.scaled(24,24));
+      
+      // std::cout << x * 24 << " " << y * 24 << std::endl;
+      imgTmp->setPos(x * 24, y * 24);
+      imgTmp->show();
+      addItem(imgTmp);
+      _imgsSol.push_back(imgTmp);
+    }
+  }
+
+  setSceneRect(0,0, getMAX_X() * 24, getMAX_X() * 24);
 }
 
 int World::getMAX_X(){
@@ -63,21 +79,17 @@ void World::peuplement(){
   }
 }
 
-void World::affiche(){
+void World::affiche()
+{
+  for (unsigned int i = 0; i < _imgsSol.size(); i++)
+  {
+    _imgsSol[i]->show();
+  }
   for (unsigned int i = 0; i < world.size(); i++)
   {
     world[i]->getImg()->setPos(world[i]->getterX() * 24, world[i]->getterY() * 24);
     world[i]->getImg()->show();
   }
-  std::cout << "display" << std::endl;
-  // system("clear");
-  // for(int i=0;i<getMAX_X();i++){
-  //   for(int o=0;o<getMAX_Y();o++){
-  //     std::cout <<tab[i][o];
-  //   }
-  // //  std::cout << nb_animaux;
-  //   std::cout<<'\n';
-  // }
 }
 
 void World::bouge(Animal *goelan)
