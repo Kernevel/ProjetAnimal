@@ -15,7 +15,7 @@ CXX           = g++
 DEFINES       = -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB
 CFLAGS        = -pipe -O2 -march=x86-64 -mtune=generic -O2 -pipe -fstack-protector-strong -fno-plt -Wall -W -D_REENTRANT -fPIC $(DEFINES)
 CXXFLAGS      = -pipe -O2 -march=x86-64 -mtune=generic -O2 -pipe -fstack-protector-strong -fno-plt -Wall -W -D_REENTRANT -fPIC $(DEFINES)
-INCPATH       = -I. -Iinclude -isystem /usr/include/qt -isystem /usr/include/qt/QtWidgets -isystem /usr/include/qt/QtGui -isystem /usr/include/qt/QtCore -I. -isystem /usr/include/libdrm -I/usr/lib/qt/mkspecs/linux-g++
+INCPATH       = -I. -Iinclude -isystem /usr/include/qt -isystem /usr/include/qt/QtWidgets -isystem /usr/include/qt/QtGui -isystem /usr/include/qt/QtCore -Isrc/moc -isystem /usr/include/libdrm -I/usr/lib/qt/mkspecs/linux-g++
 QMAKE         = /usr/bin/qmake
 DEL_FILE      = rm -f
 CHK_DIR_EXISTS= test -d
@@ -54,12 +54,15 @@ SOURCES       = src/Animal.cpp \
 		src/Gazelle.cpp \
 		src/Lion.cpp \
 		src/main.cpp \
-		src/World.cpp 
+		src/World.cpp \
+		src/fenetrePrincipale.cpp src/moc/moc_fenetrePrincipale.cpp
 OBJECTS       = Animal.o \
 		Gazelle.o \
 		Lion.o \
 		main.o \
-		World.o
+		World.o \
+		fenetrePrincipale.o \
+		moc_fenetrePrincipale.o
 DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
 		/usr/lib/qt/mkspecs/common/unix.conf \
 		/usr/lib/qt/mkspecs/common/linux.conf \
@@ -247,11 +250,13 @@ DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
 		/usr/lib/qt/mkspecs/features/exceptions.prf \
 		/usr/lib/qt/mkspecs/features/yacc.prf \
 		/usr/lib/qt/mkspecs/features/lex.prf \
-		project.pro  src/Animal.cpp \
+		project.pro include/fenetrePrincipale.hpp \
+		include/World.h src/Animal.cpp \
 		src/Gazelle.cpp \
 		src/Lion.cpp \
 		src/main.cpp \
-		src/World.cpp
+		src/World.cpp \
+		src/fenetrePrincipale.cpp
 QMAKE_TARGET  = main.exe
 DESTDIR       = 
 TARGET        = main.exe
@@ -661,7 +666,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/qt/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents src/Animal.cpp src/Gazelle.cpp src/Lion.cpp src/main.cpp src/World.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents include/fenetrePrincipale.hpp include/World.h $(DISTDIR)/
+	$(COPY_FILE) --parents src/Animal.cpp src/Gazelle.cpp src/Lion.cpp src/main.cpp src/World.cpp src/fenetrePrincipale.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -687,14 +693,24 @@ benchmark: first
 
 compiler_rcc_make_all:
 compiler_rcc_clean:
-compiler_moc_predefs_make_all: moc_predefs.h
+compiler_moc_predefs_make_all: src/moc/moc_predefs.h
 compiler_moc_predefs_clean:
-	-$(DEL_FILE) moc_predefs.h
-moc_predefs.h: /usr/lib/qt/mkspecs/features/data/dummy.cpp
-	g++ -pipe -O2 -march=x86-64 -mtune=generic -O2 -pipe -fstack-protector-strong -fno-plt -Wall -W -dM -E -o moc_predefs.h /usr/lib/qt/mkspecs/features/data/dummy.cpp
+	-$(DEL_FILE) src/moc/moc_predefs.h
+src/moc/moc_predefs.h: /usr/lib/qt/mkspecs/features/data/dummy.cpp
+	g++ -pipe -O2 -march=x86-64 -mtune=generic -O2 -pipe -fstack-protector-strong -fno-plt -Wall -W -dM -E -o src/moc/moc_predefs.h /usr/lib/qt/mkspecs/features/data/dummy.cpp
 
-compiler_moc_header_make_all:
+compiler_moc_header_make_all: src/moc/moc_fenetrePrincipale.cpp
 compiler_moc_header_clean:
+	-$(DEL_FILE) src/moc/moc_fenetrePrincipale.cpp
+src/moc/moc_fenetrePrincipale.cpp: include/World.h \
+		include/Animal.h \
+		include/Lion.h \
+		include/Gazelle.h \
+		include/fenetrePrincipale.hpp \
+		src/moc/moc_predefs.h \
+		/usr/bin/moc
+	/usr/bin/moc $(DEFINES) --include ./src/moc//moc_predefs.h -I/usr/lib/qt/mkspecs/linux-g++ -I/home/antoine/Documents/ProjetAnimal -I/home/antoine/Documents/ProjetAnimal/include -I/usr/include/qt -I/usr/include/qt/QtWidgets -I/usr/include/qt/QtGui -I/usr/include/qt/QtCore -I/usr/include/c++/7.3.1 -I/usr/include/c++/7.3.1/x86_64-pc-linux-gnu -I/usr/include/c++/7.3.1/backward -I/usr/lib/gcc/x86_64-pc-linux-gnu/7.3.1/include -I/usr/local/include -I/usr/lib/gcc/x86_64-pc-linux-gnu/7.3.1/include-fixed -I/usr/include include/fenetrePrincipale.hpp -o src/moc/moc_fenetrePrincipale.cpp
+
 compiler_moc_objc_header_make_all:
 compiler_moc_objc_header_clean:
 compiler_moc_source_make_all:
@@ -707,7 +723,7 @@ compiler_yacc_impl_make_all:
 compiler_yacc_impl_clean:
 compiler_lex_make_all:
 compiler_lex_clean:
-compiler_clean: compiler_moc_predefs_clean 
+compiler_clean: compiler_moc_predefs_clean compiler_moc_header_clean 
 
 ####### Compile
 
@@ -725,7 +741,8 @@ Lion.o: src/Lion.cpp include/Lion.h \
 main.o: src/main.cpp include/World.h \
 		include/Animal.h \
 		include/Lion.h \
-		include/Gazelle.h
+		include/Gazelle.h \
+		include/fenetrePrincipale.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o src/main.cpp
 
 World.o: src/World.cpp include/World.h \
@@ -733,6 +750,16 @@ World.o: src/World.cpp include/World.h \
 		include/Lion.h \
 		include/Gazelle.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o World.o src/World.cpp
+
+fenetrePrincipale.o: src/fenetrePrincipale.cpp include/fenetrePrincipale.hpp \
+		include/World.h \
+		include/Animal.h \
+		include/Lion.h \
+		include/Gazelle.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o fenetrePrincipale.o src/fenetrePrincipale.cpp
+
+moc_fenetrePrincipale.o: src/moc/moc_fenetrePrincipale.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_fenetrePrincipale.o src/moc/moc_fenetrePrincipale.cpp
 
 ####### Install
 

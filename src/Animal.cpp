@@ -19,6 +19,16 @@
     nb_animaux--;
   }
 
+  void Animal::setPixmap(const QPixmap pix)
+  {
+    img = new QGraphicsPixmapItem(pix.scaled(24,24));
+  }
+
+  QGraphicsPixmapItem *Animal::getImg() const
+  {
+    return (img);
+  }
+
   int Animal::getterX() const{
     return x;
   }

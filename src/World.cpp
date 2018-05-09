@@ -3,13 +3,21 @@
 #include <ctime>
 #include <unistd.h>
 
-World::World(int nb_anim){
+World::World()
+{
+
+}
+
+World::World(int nb_anim, QObject *parent) : QGraphicsScene(parent){
   nb_animaux=nb_anim;
   for(int i=0;i<getMAX_X();i++){
     for(int o=0;o<getMAX_Y();o++){
       tab[i][o]=',';
     }
   }
+  _lion = QPixmap("./img/Lion.png");
+  _gazelle = QPixmap("./img/Gazelle.png");
+  _sol = QPixmap("./img/sol.png");
 }
 
 int World::getMAX_X(){
@@ -33,7 +41,8 @@ void World::peuplement(){
           gaz=new Gazelle;
           gaz->setterX(rand()%getMAX_X());
           gaz->setterY(rand()%getMAX_Y());
-          gaz->setterL('G');
+          gaz->setPixmap(_gazelle);
+          addItem(gaz->getImg());
           world.push_back(gaz);
           //tab[world[i].getterX()][world[i].getterY()]='A';
           std::cout << "Position en x = " << world[i]->getterX()<<" Position en y = "<< world[i]->getterY()<<'\n';
@@ -43,7 +52,8 @@ void World::peuplement(){
           soap=new Lion;
           soap->setterX(rand()%getMAX_X());
           soap->setterY(rand()%getMAX_Y());
-          soap->setterL('L');
+          soap->setPixmap(_lion);
+          addItem(soap->getImg());
           world.push_back(soap);
           //tab[world[i].getterX()][world[i].getterY()]='A';
           std::cout << "Position en x = " << world[i]->getterX()<<" Position en y = "<< world[i]->getterY()<<'\n';
@@ -54,15 +64,20 @@ void World::peuplement(){
 }
 
 void World::affiche(){
-  system("clear");
-  for(int i=0;i<getMAX_X();i++){
-    for(int o=0;o<getMAX_Y();o++){
-      std::cout <<tab[i][o];
-    }
-  //  std::cout << nb_animaux;
-    std::cout<<'\n';
+  for (unsigned int i = 0; i < world.size(); i++)
+  {
+    world[i]->getImg()->setPos(world[i]->getterX() * 24, world[i]->getterY() * 24);
+    world[i]->getImg()->show();
   }
-  usleep(100000);
+  std::cout << "display" << std::endl;
+  // system("clear");
+  // for(int i=0;i<getMAX_X();i++){
+  //   for(int o=0;o<getMAX_Y();o++){
+  //     std::cout <<tab[i][o];
+  //   }
+  // //  std::cout << nb_animaux;
+  //   std::cout<<'\n';
+  // }
 }
 
 void World::bouge(Animal *goelan)
@@ -118,7 +133,7 @@ void World::passeuntour(){
         }
       }
     }
-    if (world[i]->getterE()==0){
+    if (world[i]->getterE() <= 0){
       tab[world[i]->getterX()][world[i]->getterY()]='X';
       world.erase(world.begin()+i);
       nb_animaux--;

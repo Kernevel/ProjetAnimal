@@ -1,23 +1,20 @@
-#pragma once
-#include fenetrePrincipale.hpp
-#include World.h
+#include <QTimer>
+#include "fenetrePrincipale.hpp"
+#define NB_ANIMALO 100
 
-MainWindow::MainWindow():QMainWindow(){
-  widget_general = new QWidget;
-  QHBoxLayout * qbl_general = new QHBoxLayout;
-  widget_general->setLayout(qbl_general);
-  widget_general->setFixedWidth(getMAX_X()*24);
-  widget_general->setFixedHeight(getMAX_Y()*24);
-  this->setCentralWidget(widget_general);
-  //exemple de creation d'une zone ou mettre boutons...
-  // exemple de création d'un menu
-  MyScene * myscene = new MyScene(this);
-  myscene->setBackgroundBrush(Qt::green);
-  QGraphicsView * myview = new QGraphicsView(myscene,this);
-  qbl_general->addWidget(myview);
-  menuFichier = menuBar()->addMenu(tr("&Fichier"));
+MainWindow::MainWindow()
+{
+  QWidget *widget_general = new QWidget;
+  setCentralWidget(widget_general);
+  _world = new World(NB_ANIMALO, widget_general);
+  _world->peuplement();
+  QTimer *timer = new QTimer(this);
+  connect(timer, SIGNAL(timeout()), this, SLOT(runTurn()));
+  timer->start(100); //time specified in ms  QTimer::singleShot(5, this, SLOT(runTurn()));
 }
 
-MainWindow::~MainWindow(){
-
+void MainWindow::runTurn()
+{
+  _world->passeuntour();
+  _world->affiche();
 }
